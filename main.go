@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -87,6 +88,12 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Index page
+func index(w http.ResponseWriter, r *http.Request) {
+	const message string = " welcome to simple golang rest-api "
+	w.Write([]byte(message))
+}
+
 // Main function
 func main() {
 	// Init router
@@ -97,6 +104,7 @@ func main() {
 	books = append(books, Book{ID: "2", Isbn: "454555", Title: "Book Two", Author: &Author{Firstname: "Steve", Lastname: "Smith"}})
 
 	// Route handles & endpoints
+	r.HandleFunc("/", index).Methods("GET")
 	r.HandleFunc("/books", getBooks).Methods("GET")
 	r.HandleFunc("/books/{id}", getBook).Methods("GET")
 	r.HandleFunc("/books", createBook).Methods("POST")
@@ -104,6 +112,7 @@ func main() {
 	r.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
 
 	// Start server
+	fmt.Println("server running on port *8000")
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
 
